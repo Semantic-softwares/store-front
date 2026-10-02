@@ -1,0 +1,67 @@
+@if (store.lastOrderResult(); as result) {
+  <div class="fixed inset-0 z-50 flex flex-col items-center overflow-y-auto px-6 py-10 text-center" style="background: var(--sf-surface, #fff)">
+    <button type="button" class="absolute right-4 top-4" (click)="store.dismissOrderResult()">
+      <mat-icon style="color: var(--sf-muted, #6b7280)">close</mat-icon>
+    </button>
+
+    <div class="flex flex-1 flex-col items-center justify-center gap-3">
+      <div class="flex h-14 w-14 items-center justify-center rounded-full" style="background: var(--sf-accent, #111827)">
+        <mat-icon style="color: var(--sf-on-accent, #fff)">check</mat-icon>
+      </div>
+      <h1 class="text-lg font-semibold" style="color: var(--sf-text, #111827)" i18n="@@storefront.confirmation.title">
+        Order sent to the kitchen
+      </h1>
+      <p class="text-sm" style="color: var(--sf-muted, #6b7280)">
+        <span i18n="@@storefront.cart.itemCount">{result.itemCount, plural, =1 {1 item} other {{{result.itemCount}} items}}</span>
+        ·
+        <span i18n="@@storefront.confirmation.orderRef">Order {{ result.orderReference }}</span>
+      </p>
+
+      @if (result.deliveryType === 'Delivery') {
+        <div class="w-full max-w-xs rounded-lg p-3 text-sm" style="border: 1px solid var(--sf-border, #e5e7eb)">
+          <div class="flex items-center justify-between" style="color: var(--sf-muted, #6b7280)">
+            <span i18n="@@storefront.cart.subtotal">Subtotal</span>
+            <span>{{ (result.subTotal ?? 0) | currency: (store.storeInfo()?.currency || '₦') : 'symbol' : '1.0-0' }}</span>
+          </div>
+          <div class="mt-1 flex items-center justify-between" style="color: var(--sf-muted, #6b7280)">
+            <span i18n="@@storefront.cart.deliveryFee">Delivery fee</span>
+            @if (result.shippingFee) {
+              <span>{{ result.shippingFee | currency: (store.storeInfo()?.currency || '₦') : 'symbol' : '1.0-0' }}</span>
+            } @else {
+              <span i18n="@@storefront.cart.free">Free</span>
+            }
+          </div>
+          <div
+            class="mt-2 flex items-center justify-between border-t pt-2 font-semibold"
+            style="border-color: var(--sf-border, #e5e7eb); color: var(--sf-text, #111827)"
+          >
+            <span i18n="@@storefront.cart.total">Total</span>
+            <span>{{ result.total | currency: (store.storeInfo()?.currency || '₦') : 'symbol' : '1.0-0' }}</span>
+          </div>
+        </div>
+      } @else {
+        <p class="text-sm font-semibold" style="color: var(--sf-text, #111827)">
+          {{ result.total | currency: (store.storeInfo()?.currency || '₦') : 'symbol' : '1.0-0' }}
+        </p>
+      }
+
+      @if (store.lastOrderShipping(); as shipping) {
+        <app-storefront-delivery-address-card [shipping]="shipping" class="w-full max-w-xs" />
+      }
+
+      <p class="max-w-xs text-xs" style="color: var(--sf-muted, #6b7280)" i18n="@@storefront.confirmation.subtitle">
+        Your server will bring your order out shortly. You can pay in person when you're ready.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="mt-6 w-full max-w-xs rounded-xl px-5 py-2.5 text-sm font-semibold"
+      style="background: var(--sf-accent, #111827); color: var(--sf-on-accent, #fff)"
+      (click)="store.dismissOrderResult()"
+      i18n="@@storefront.confirmation.orderMore"
+    >
+      Order more
+    </button>
+  </div>
+}

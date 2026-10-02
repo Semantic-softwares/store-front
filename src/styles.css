@@ -1,0 +1,14 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import 'tailwindcss';
+
+/* Google Places Autocomplete's suggestion dropdown (.pac-container) is
+   appended directly to <body>, outside any component's view — and outside
+   Angular Material's CDK overlay stacking context too. Its own default
+   z-index sits below the CDK overlay container's (1000), so inside
+   CheckoutDetailsDialogComponent the suggestions list rendered but was
+   completely hidden behind the dialog itself: the address search looked
+   broken even though Places was returning results. */
+.pac-container {
+  z-index: 10000 !important;
+}

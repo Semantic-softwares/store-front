@@ -1,0 +1,177 @@
+<div class="flex items-start justify-between px-6 pt-6 pb-2">
+  <div>
+    <h2 class="text-lg font-semibold" style="color: var(--sf-text, #111827)" i18n="@@storefront.checkout.title">
+      Your details
+    </h2>
+    <p class="mt-1 text-sm" style="color: var(--sf-muted, #6b7280)" i18n="@@storefront.checkout.subtitle">
+      So we know who's ordering and how to get it to you.
+    </p>
+  </div>
+  <button type="button" (click)="close()" aria-label="Close">
+    <mat-icon style="color: var(--sf-muted, #6b7280)">close</mat-icon>
+  </button>
+</div>
+
+<div class="max-h-[70vh] overflow-y-auto px-6 py-3">
+  <div class="flex items-center justify-between rounded-lg px-3 py-3" style="border: 1px solid var(--sf-border, #e5e7eb)">
+    <span class="text-sm font-medium" style="color: var(--sf-text, #111827)" i18n="@@storefront.checkout.pickupSelf">
+      I'll pick this up myself
+    </span>
+    <mat-slide-toggle [checked]="pickupMyself()" (change)="pickupMyself.set($event.checked)"></mat-slide-toggle>
+  </div>
+
+  <div class="mt-4 space-y-3">
+    <input
+      type="text"
+      placeholder="Full name"
+      i18n-placeholder="@@storefront.checkout.namePlaceholder"
+      autofocus
+      class="w-full rounded-lg px-3 py-2.5 text-sm outline-none"
+      style="border: 1px solid var(--sf-border, #e5e7eb)"
+      [ngModel]="name()"
+      (ngModelChange)="name.set($event)"
+    />
+    <input
+      type="tel"
+      placeholder="Phone number"
+      i18n-placeholder="@@storefront.checkout.phonePlaceholder"
+      class="w-full rounded-lg px-3 py-2.5 text-sm outline-none"
+      style="border: 1px solid var(--sf-border, #e5e7eb)"
+      [ngModel]="phone()"
+      (ngModelChange)="phone.set($event)"
+    />
+    <input
+      type="email"
+      placeholder="Email (optional)"
+      i18n-placeholder="@@storefront.checkout.emailPlaceholder"
+      class="w-full rounded-lg px-3 py-2.5 text-sm outline-none"
+      style="border: 1px solid var(--sf-border, #e5e7eb)"
+      [ngModel]="email()"
+      (ngModelChange)="email.set($event)"
+    />
+  </div>
+
+  @if (isDelivery()) {
+    <div class="mt-4 space-y-2">
+      <p class="text-xs font-semibold uppercase tracking-wide" style="color: var(--sf-muted, #6b7280)" i18n="@@storefront.checkout.deliverTo">
+        Deliver to
+      </p>
+
+      <button
+        type="button"
+        class="flex w-full items-center justify-center gap-2 rounded-lg py-2.5 text-sm font-medium"
+        style="border: 1px solid var(--sf-border, #e5e7eb); color: var(--sf-text, #111827)"
+        [disabled]="isLocating()"
+        (click)="useCurrentLocation()"
+      >
+        @if (isLocating()) {
+          <mat-spinner diameter="16"></mat-spinner>
+        } @else {
+          <mat-icon class="!text-base">my_location</mat-icon>
+        }
+        <span i18n="@@storefront.checkout.useCurrentLocation">Use my current location</span>
+      </button>
+
+      <div class="relative">
+        <input
+          #addressInput
+          type="text"
+          placeholder="Or search for your address"
+          i18n-placeholder="@@storefront.checkout.searchAddress"
+          class="w-full rounded-lg px-3 py-2.5 text-sm outline-none"
+          style="border: 1px solid var(--sf-border, #e5e7eb)"
+          [ngModel]="addressLabel()"
+          (ngModelChange)="addressLabel.set($event)"
+        />
+      </div>
+
+      @if (location(); as loc) {
+        <p class="flex items-start gap-1.5 text-xs" style="color: var(--sf-muted, #6b7280)">
+          <mat-icon class="!text-sm !h-4 !w-4 leading-4" style="color: var(--sf-accent, #111827)">check_circle</mat-icon>
+          <span>{{ addressLabel() }}</span>
+        </p>
+      }
+      @if (locationError()) {
+        <p class="text-xs" style="color: #dc2626">{{ locationError() }}</p>
+      }
+      @if (quoteLoading()) {
+        <p class="flex items-center gap-1.5 text-xs" style="color: var(--sf-muted, #6b7280)">
+          <mat-spinner diameter="12"></mat-spinner>
+          <span i18n="@@storefront.checkout.checkingAddress">Checking delivery fee for this address…</span>
+        </p>
+      }
+      @if (quoteError()) {
+        <p class="text-xs" style="color: #dc2626">{{ quoteError() }}</p>
+      }
+    </div>
+  }
+
+  <div class="mt-4 space-y-2">
+    <p class="text-xs font-semibold uppercase tracking-wide" style="color: var(--sf-muted, #6b7280)" i18n="@@storefront.checkout.payWith">
+      How will you pay?
+    </p>
+    <div class="grid grid-cols-2 gap-2">
+      <button
+        type="button"
+        class="rounded-lg py-2.5 text-sm font-medium"
+        [style]="paymentMethod() === 'cash'
+          ? 'border: 1px solid var(--sf-accent, #111827); background: var(--sf-accent, #111827); color: var(--sf-on-accent, #fff)'
+          : 'border: 1px solid var(--sf-border, #e5e7eb); color: var(--sf-text, #111827)'"
+        (click)="paymentMethod.set('cash')"
+        i18n="@@storefront.checkout.payCash"
+      >
+        Cash
+      </button>
+      <button
+        type="button"
+        class="rounded-lg py-2.5 text-sm font-medium"
+        [style]="paymentMethod() === 'transfer'
+          ? 'border: 1px solid var(--sf-accent, #111827); background: var(--sf-accent, #111827); color: var(--sf-on-accent, #fff)'
+          : 'border: 1px solid var(--sf-border, #e5e7eb); color: var(--sf-text, #111827)'"
+        (click)="paymentMethod.set('transfer')"
+        i18n="@@storefront.checkout.payTransfer"
+      >
+        Transfer
+      </button>
+    </div>
+  </div>
+
+  <div class="mt-4 space-y-1.5 rounded-lg p-3 text-sm" style="border: 1px solid var(--sf-border, #e5e7eb)">
+    <div class="flex items-center justify-between" style="color: var(--sf-muted, #6b7280)">
+      <span i18n="@@storefront.cart.subtotal">Subtotal</span>
+      <span>{{ subtotal() | currency: (store.storeInfo()?.currency || '₦') : 'symbol' : '1.0-0' }}</span>
+    </div>
+    @if (isDelivery()) {
+      <div class="flex items-center justify-between" style="color: var(--sf-muted, #6b7280)">
+        <span i18n="@@storefront.cart.deliveryFee">Delivery fee</span>
+        @if (quoteLoading()) {
+          <span>—</span>
+        } @else if (deliveryQuote()) {
+          <span>{{ deliveryQuote()!.shippingFee | currency: (store.storeInfo()?.currency || '₦') : 'symbol' : '1.0-0' }}</span>
+        } @else {
+          <span i18n="@@storefront.checkout.pendingAddress">Add an address</span>
+        }
+      </div>
+    }
+    <div
+      class="mt-1.5 flex items-center justify-between border-t pt-1.5 font-semibold"
+      style="border-color: var(--sf-border, #e5e7eb); color: var(--sf-text, #111827)"
+    >
+      <span i18n="@@storefront.cart.total">Total</span>
+      <span>{{ total() | currency: (store.storeInfo()?.currency || '₦') : 'symbol' : '1.0-0' }}</span>
+    </div>
+  </div>
+</div>
+
+<div class="flex items-center justify-end gap-2 px-6 pb-6 pt-2">
+  <button
+    type="button"
+    class="rounded-lg px-4 py-2.5 text-sm font-semibold disabled:opacity-40"
+    style="background: var(--sf-accent, #111827); color: var(--sf-on-accent, #fff)"
+    [disabled]="!canSubmit()"
+    (click)="submit()"
+    i18n="@@storefront.checkout.placeOrder"
+  >
+    Place order
+  </button>
+</div>

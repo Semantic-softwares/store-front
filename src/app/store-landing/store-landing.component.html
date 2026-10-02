@@ -1,0 +1,50 @@
+@if (store.isLoading()) {
+  <app-storefront-loading />
+} @else if (store.loadError()) {
+  <app-storefront-empty
+    icon="error_outline"
+    title="Something went wrong"
+    i18n-title="@@storefront.landing.error.title"
+    [message]="store.loadError()!"
+  />
+} @else if (store.storeInfo(); as info) {
+  <div class="flex min-h-screen flex-col" style="background: var(--sf-bg, #f9fafb); font-family: var(--sf-font-family, inherit)">
+    <div
+      class="h-48 w-full sm:h-64"
+      [style.background]="info.bannerImage ? 'center / cover no-repeat url(' + info.bannerImage + ')' : 'var(--sf-accent, #111827)'"
+    ></div>
+
+    <div class="-mt-12 flex flex-1 flex-col items-center px-6 pb-12">
+      @if (info.logo) {
+        <img
+          [src]="info.logo"
+          [alt]="info.name"
+          class="h-24 w-24 rounded-full border-4 object-cover shadow-md"
+          style="border-color: var(--sf-bg, #f9fafb); background: #fff"
+        />
+      }
+
+      <h1 class="mt-4 text-center text-2xl font-bold" style="color: var(--sf-text, #111827)">{{ info.name }}</h1>
+
+      @if (info.selfOrderSettings?.enabled) {
+        <button
+          type="button"
+          (click)="viewMenu()"
+          class="mt-6 rounded-full px-8 py-3 text-sm font-semibold text-white shadow-sm transition active:scale-95"
+          style="background: var(--sf-accent, #111827)"
+        >
+          <span i18n="@@storefront.landing.viewMenu">View Menu</span>
+        </button>
+      } @else {
+        <p class="mt-6 text-sm" style="color: var(--sf-muted, #6b7280)" i18n="@@storefront.landing.orderingUnavailable">
+          Ordering isn't available right now.
+        </p>
+      }
+
+      <div class="mt-10 w-full max-w-md">
+        <app-storefront-wifi-card />
+        <app-storefront-store-footer />
+      </div>
+    </div>
+  </div>
+}

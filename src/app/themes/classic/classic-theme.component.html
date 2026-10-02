@@ -1,0 +1,63 @@
+<header
+  class="relative flex flex-col items-center gap-2 px-4 pb-6 pt-10 text-center"
+  style="border-bottom: 1px solid var(--sf-border, #e5e7eb)"
+>
+  <div class="absolute left-4 top-4 flex items-center gap-1">
+    <button type="button" (click)="share()" aria-label="Share" style="color: var(--sf-muted, #6b7280)">
+      <mat-icon>{{ justCopied() ? 'check' : 'ios_share' }}</mat-icon>
+    </button>
+    <button type="button" (click)="openInfo()" aria-label="Store info" style="color: var(--sf-muted, #6b7280)">
+      <mat-icon>info_outline</mat-icon>
+    </button>
+  </div>
+  <div class="absolute right-4 top-4">
+    <app-storefront-language-switcher />
+  </div>
+
+  @if (store.storeInfo()?.logo) {
+    <img [src]="store.storeInfo()!.logo" [alt]="store.storeInfo()!.name" class="h-16 w-16 rounded-full object-cover" />
+  }
+  <h1 class="text-xl font-bold tracking-wide" style="color: var(--sf-text, #111827)">{{ store.storeInfo()?.name }}</h1>
+  @if (store.storeInfo()?.placeName) {
+    <p class="flex items-center gap-1 text-xs" style="color: var(--sf-muted, #9ca3af)">
+      <mat-icon class="!text-sm !h-3.5 !w-3.5">place</mat-icon>
+      {{ store.storeInfo()?.placeName }}
+    </p>
+  }
+  @if (store.orderingLocked()) {
+    <p class="rounded-full px-3 py-1 text-xs font-semibold" style="background: #fef2f2; color: #b91c1c" i18n="@@storefront.header.closed">
+      Closed right now
+    </p>
+  }
+  @if (store.table(); as table) {
+    <!-- The name is printed exactly as staff typed it, with no "Table"
+         prefix: stores routinely name their tables "Table 4" already, and
+         prefixing produced "TABLE TABLE 4" on those menus. -->
+    <p class="text-xs uppercase tracking-widest" style="color: var(--sf-muted, #9ca3af)">{{ table.name }}</p>
+  }
+</header>
+
+<main class="mx-auto max-w-lg px-4 pb-28 pt-6">
+  @if (store.qrToken()) {
+    <app-storefront-wifi-card />
+  }
+
+  <div class="space-y-8">
+  @for (section of store.menu(); track section._id) {
+    @if (section.foods.length > 0) {
+      <section>
+        <h2 class="mb-3 text-sm font-bold uppercase tracking-widest" style="color: var(--sf-accent, #111827)">
+          {{ section.name }}
+        </h2>
+        <div class="space-y-3">
+          @for (product of section.foods; track product._id) {
+            <app-storefront-product-card [product]="product" [currency]="store.storeInfo()?.currency || '₦'" />
+          }
+        </div>
+      </section>
+    }
+  }
+  </div>
+
+  <app-storefront-store-footer />
+</main>

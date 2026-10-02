@@ -1,0 +1,76 @@
+@let info = store.storeInfo();
+<div class="flex items-start justify-between px-6 pt-6 pb-2">
+  <h2 class="text-lg font-semibold" style="color: var(--sf-text, #111827)" i18n="@@storefront.storeInfo.title">
+    Store info
+  </h2>
+  <button type="button" (click)="close()" aria-label="Close">
+    <mat-icon style="color: var(--sf-muted, #6b7280)">close</mat-icon>
+  </button>
+</div>
+
+<div class="max-h-[75vh] overflow-y-auto px-6 pb-6">
+  @if (info) {
+    @if (store.orderingLocked()) {
+      <div class="mb-4 flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium" style="background: #fef2f2; color: #b91c1c">
+        <mat-icon class="!text-base">schedule</mat-icon>
+        <span i18n="@@storefront.storeInfo.closedNotice">Closed right now — not accepting orders.</span>
+      </div>
+    }
+
+    <div class="flex items-center gap-3">
+      @if (info.logo) {
+        <img [src]="info.logo" [alt]="info.name" class="h-14 w-14 rounded-full object-cover" style="border: 1px solid var(--sf-border, #e5e7eb)" />
+      }
+      <div class="min-w-0">
+        <h3 class="truncate text-base font-semibold" style="color: var(--sf-text, #111827)">{{ info.name }}</h3>
+        @if (info.placeName) {
+          <p class="flex items-center gap-1 text-xs" style="color: var(--sf-muted, #6b7280)">
+            <mat-icon class="!text-sm !h-3.5 !w-3.5">place</mat-icon>
+            {{ info.placeName }}
+          </p>
+        }
+      </div>
+    </div>
+
+    @if (info.description) {
+      <p class="mt-3 text-sm" style="color: var(--sf-text, #111827)">{{ info.description }}</p>
+    }
+
+    @if (info.contactInfo; as contact) {
+      <div class="mt-4 space-y-1.5 text-sm" style="color: var(--sf-text, #111827)">
+        @if (contact.phone) {
+          <p class="flex items-center gap-2"><mat-icon class="!text-base" style="color: var(--sf-muted, #6b7280)">call</mat-icon>{{ contact.phone }}</p>
+        }
+        @if (contact.email) {
+          <p class="flex items-center gap-2"><mat-icon class="!text-base" style="color: var(--sf-muted, #6b7280)">mail</mat-icon>{{ contact.email }}</p>
+        }
+        @if (contact.address) {
+          <p class="flex items-center gap-2"><mat-icon class="!text-base" style="color: var(--sf-muted, #6b7280)">location_on</mat-icon>{{ contact.address }}</p>
+        }
+      </div>
+    }
+
+    @if (info.businessHours && info.businessHours.length > 0) {
+      <h4 class="mb-2 mt-5 text-xs font-semibold uppercase tracking-wide" style="color: var(--sf-muted, #6b7280)" i18n="@@storefront.storeInfo.hours">
+        Hours
+      </h4>
+      <div class="space-y-1 text-sm">
+        @for (day of info.businessHours; track day.day) {
+          <div
+            class="flex items-center justify-between rounded-lg px-2.5 py-1.5"
+            [style.background]="day.isToday ? 'var(--sf-muted-bg, #f3f4f6)' : 'transparent'"
+          >
+            <span [style.font-weight]="day.isToday ? 600 : 400" style="color: var(--sf-text, #111827)" class="capitalize">
+              {{ day.day }}
+            </span>
+            @if (day.open) {
+              <span style="color: var(--sf-muted, #6b7280)">{{ day.opens }} – {{ day.closes }}</span>
+            } @else {
+              <span style="color: var(--sf-muted, #6b7280)" i18n="@@storefront.storeInfo.closedDay">Closed</span>
+            }
+          </div>
+        }
+      </div>
+    }
+  }
+</div>
