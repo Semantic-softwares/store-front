@@ -1,0 +1,111 @@
+{
+  "configVersion": 1,
+  "timestamp": 1790927853408,
+  "index": "/index.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/chunk-AOkeemiO.js",
+        "/chunk-BH1JMl86.js",
+        "/chunk-BQiBNDpg.js",
+        "/chunk-BlFsHY1x.js",
+        "/chunk-C36l2Dmq.js",
+        "/chunk-C4qZFSPa.js",
+        "/chunk-CZmkmWlP.js",
+        "/chunk-CzZVzA76.js",
+        "/chunk-DR5JMVQo.js",
+        "/chunk-D_CVOaly.js",
+        "/chunk-DxKvEcQF.js",
+        "/chunk-VLF-JRFL.js",
+        "/chunk-aWpepOG9.js",
+        "/chunk-y2Whp5ZF.js",
+        "/chunk-zystk1pz.js",
+        "/favicon.ico",
+        "/firebase-messaging-sw.js",
+        "/index.html",
+        "/main-HEV7Y6K7.js",
+        "/manifest.webmanifest",
+        "/polyfills-OMGXLRKZ.js",
+        "/styles-BCGRET7D.css"
+      ],
+      "patterns": []
+    },
+    {
+      "name": "assets",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/icons/icon-128x128.png",
+        "/icons/icon-144x144.png",
+        "/icons/icon-152x152.png",
+        "/icons/icon-192x192.png",
+        "/icons/icon-384x384.png",
+        "/icons/icon-512x512.png",
+        "/icons/icon-72x72.png",
+        "/icons/icon-96x96.png"
+      ],
+      "patterns": []
+    }
+  ],
+  "dataGroups": [],
+  "hashTable": {
+    "/chunk-AOkeemiO.js": "051a3f9d81c9715a485273a30bbf248dd6b4cec9",
+    "/chunk-BH1JMl86.js": "d9efc8811d8a198ae4e3539c1b16065db5988597",
+    "/chunk-BQiBNDpg.js": "3deaa3b7693a57a606a2256fd3a54965e9b93ee5",
+    "/chunk-BlFsHY1x.js": "e800c96105baa8ac03a09de1bf8d92d24b676376",
+    "/chunk-C36l2Dmq.js": "ab8c1d70d39c62464885e75acd9d47d2e695f9f4",
+    "/chunk-C4qZFSPa.js": "65379866fbb9d187dbae2a08283ebe7b4691b1a8",
+    "/chunk-CZmkmWlP.js": "437bd99646cd6ac4da3d7516c5da86d1a8c8eff9",
+    "/chunk-CzZVzA76.js": "9d594757394955249ab3cd40ed678fda26607fe2",
+    "/chunk-DR5JMVQo.js": "df8d81692c3a66166e6528cc34aadfa6a4c39257",
+    "/chunk-D_CVOaly.js": "1c58ce02b4202d39666d70fdf0ff1b99d003f2c4",
+    "/chunk-DxKvEcQF.js": "50aab801024e5464dd1c9127cf0a362080fc1bab",
+    "/chunk-VLF-JRFL.js": "ef16fdc2ea9d12c95d51490f9fb8e1dcb52ecd55",
+    "/chunk-aWpepOG9.js": "8b5d74eccb51c0f3d4967522929fed129a722bfc",
+    "/chunk-y2Whp5ZF.js": "f6ddd6a12c5c8f467b09feb2f43d12ccf3dbd911",
+    "/chunk-zystk1pz.js": "41e5f6438653ffec78d480ef46c42c63182df970",
+    "/favicon.ico": "9c39f434fe1261f68c5e3eefdf734630d99c5670",
+    "/firebase-messaging-sw.js": "c06d913566e1e31e36e5f13efcf84484f0dfcafc",
+    "/icons/icon-128x128.png": "f912963bdc6d5a38d8f1dd0afbaab2ce8d657acb",
+    "/icons/icon-144x144.png": "b155fd5f2fd5d2ea7760721063003c4cd95fd783",
+    "/icons/icon-152x152.png": "eae6e0f0c8afb8aaae339e2a569b43e9238e5e6c",
+    "/icons/icon-192x192.png": "15c4180454633880d98674aa7394656196c91584",
+    "/icons/icon-384x384.png": "94a915751ef6c9282df9aea405ad679230631814",
+    "/icons/icon-512x512.png": "1de182f76f7329dfa8f9fcdd1fdcdd695bea6a99",
+    "/icons/icon-72x72.png": "aa88a6096bd973be7f6d7a5489bfa6bc2463f8c4",
+    "/icons/icon-96x96.png": "7fb8f59c30ce2ff12c700321a0b39e14b3dc8f95",
+    "/index.html": "7132096e67c7dc07df224246a9bf41ef98bd58c0",
+    "/main-HEV7Y6K7.js": "e84b949c86b6aae6c9e1d8a36e021ee744ebfad8",
+    "/manifest.webmanifest": "c2dd164c4e0e4da301908786dd18bc256858054f",
+    "/polyfills-OMGXLRKZ.js": "88f832ac6657111ed03f266d27cb0225d29a2d61",
+    "/styles-BCGRET7D.css": "e37228639413391902e1312f16bfc6032a4cf147"
+  },
+  "navigationUrls": [
+    {
+      "positive": true,
+      "regex": "^\\/.*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*\\.[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*\\/.*$"
+    }
+  ],
+  "navigationRequestStrategy": "performance"
+}
