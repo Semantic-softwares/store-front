@@ -12,3 +12,10 @@
 .pac-container {
   z-index: 10000 !important;
 }
+
+/* Home page contact modal (store-landing → ContactDialogComponent). */
+.lp-dialog .mat-mdc-dialog-surface {
+  border-radius: 1.5rem;
+  background: #fff;
+  overflow: hidden;
+}

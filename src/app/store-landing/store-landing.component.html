@@ -7,44 +7,140 @@
     i18n-title="@@storefront.landing.error.title"
     [message]="store.loadError()!"
   />
-} @else if (store.storeInfo(); as info) {
-  <div class="flex min-h-screen flex-col" style="background: var(--sf-bg, #f9fafb); font-family: var(--sf-font-family, inherit)">
-    <div
-      class="h-48 w-full sm:h-64"
-      [style.background]="info.bannerImage ? 'center / cover no-repeat url(' + info.bannerImage + ')' : 'var(--sf-accent, #111827)'"
-    ></div>
-
-    <div class="-mt-12 flex flex-1 flex-col items-center px-6 pb-12">
-      @if (info.logo) {
-        <img
-          [src]="info.logo"
-          [alt]="info.name"
-          class="h-24 w-24 rounded-full border-4 object-cover shadow-md"
-          style="border-color: var(--sf-bg, #f9fafb); background: #fff"
-        />
-      }
-
-      <h1 class="mt-4 text-center text-2xl font-bold" style="color: var(--sf-text, #111827)">{{ info.name }}</h1>
-
-      @if (info.selfOrderSettings?.enabled) {
-        <button
-          type="button"
-          (click)="viewMenu()"
-          class="mt-6 rounded-full px-8 py-3 text-sm font-semibold text-white shadow-sm transition active:scale-95"
-          style="background: var(--sf-accent, #111827)"
-        >
-          <span i18n="@@storefront.landing.viewMenu">View Menu</span>
-        </button>
+} @else if (store.storeInfo() && page(); as p) {
+  @let info = store.storeInfo()!;
+  <main class="lp" [style.--lp-accent]="p.accentColor">
+    <!-- Background: video, image, or a warm glow in the store's accent. -->
+    <div class="lp-bg" aria-hidden="true">
+      @if (p.backgroundVideo) {
+        <video
+          #bgVideo
+          class="lp-media"
+          [src]="p.backgroundVideo"
+          [poster]="p.backgroundImage ?? ''"
+          autoplay
+          muted
+          loop
+          playsinline
+          preload="auto"
+        ></video>
+      } @else if (p.backgroundImage) {
+        <div class="lp-media lp-kenburns" [style.background-image]="'url(' + p.backgroundImage + ')'"></div>
       } @else {
-        <p class="mt-6 text-sm" style="color: var(--sf-muted, #6b7280)" i18n="@@storefront.landing.orderingUnavailable">
-          Ordering isn't available right now.
-        </p>
+        <div class="lp-glow"></div>
       }
-
-      <div class="mt-10 w-full max-w-md">
-        <app-storefront-wifi-card />
-        <app-storefront-store-footer />
-      </div>
+      <div class="lp-scrim"></div>
     </div>
-  </div>
+
+    <!-- Navbar -->
+    <header class="lp-shell relative z-30 flex items-center justify-between gap-4 pt-5 sm:pt-7">
+      <a class="lp-brand lp-rise" [style.--d]="0" href="#" (click)="$event.preventDefault()" [attr.aria-label]="p.logoText">
+        @if (info.logo) {
+          <img [src]="info.logo" alt="" class="h-10 w-10 shrink-0 rounded-full object-cover ring-2 ring-white/20 sm:h-11 sm:w-11" />
+        } @else {
+          <span class="lp-brand-mark"><mat-icon>restaurant</mat-icon></span>
+        }
+        <span class="lp-brand-text">{{ p.logoText }}</span>
+      </a>
+
+      <nav class="hidden items-center gap-1 md:flex lp-rise" [style.--d]="1" aria-label="Main" i18n-aria-label="@@storefront.landing.nav">
+        <button type="button" class="lp-navlink" (click)="viewMenu()" i18n="@@storefront.landing.navMenu">Menu</button>
+        <button type="button" class="lp-navlink" (click)="openContact()" i18n="@@storefront.landing.navContact">Contact</button>
+        @if (p.showOrderButton) {
+          <button type="button" class="lp-btn lp-btn-primary ml-4 !px-6 !py-3" (click)="viewMenu()">{{ p.orderButtonText }}</button>
+        }
+      </nav>
+
+      <button
+        type="button"
+        class="lp-iconbtn md:hidden"
+        (click)="toggleMobileNav()"
+        [attr.aria-expanded]="mobileNavOpen()"
+        aria-controls="lp-mobile-nav"
+        [attr.aria-label]="mobileNavOpen() ? 'Close menu' : 'Open menu'"
+      >
+        <mat-icon>{{ mobileNavOpen() ? 'close' : 'menu' }}</mat-icon>
+      </button>
+
+      @if (mobileNavOpen()) {
+        <div class="lp-sheet-backdrop md:hidden" (click)="mobileNavOpen.set(false)" aria-hidden="true"></div>
+        <div id="lp-mobile-nav" class="lp-sheet md:hidden">
+          <button type="button" class="lp-sheet-link" (click)="viewMenu()">
+            <mat-icon>restaurant_menu</mat-icon><span i18n="@@storefront.landing.navMenu">Menu</span>
+          </button>
+          <button type="button" class="lp-sheet-link" (click)="openContact()">
+            <mat-icon>call</mat-icon><span i18n="@@storefront.landing.navContact">Contact</span>
+          </button>
+          @if (p.showOrderButton) {
+            <button type="button" class="lp-btn lp-btn-primary mt-2 w-full justify-center" (click)="viewMenu()">
+              {{ p.orderButtonText }}
+            </button>
+          }
+        </div>
+      }
+    </header>
+
+    <!-- Hero -->
+    <section class="lp-shell relative z-10 flex flex-1 items-center py-10 sm:py-14">
+      <div class="max-w-[40rem]">
+        @if (p.badgeText) {
+          <p class="lp-badge lp-rise" [style.--d]="2">
+            <mat-icon>local_fire_department</mat-icon>
+            <span>{{ p.badgeText }}</span>
+          </p>
+        }
+
+        <h1 class="lp-title lp-rise" [style.--d]="3">
+          <span class="block">{{ p.headline }}</span>
+          @if (p.headlineAccent) {
+            <span class="lp-title-accent block">{{ p.headlineAccent }}</span>
+          }
+        </h1>
+
+        @if (p.subtext) {
+          <p class="lp-lede lp-rise" [style.--d]="4">{{ p.subtext }}</p>
+        }
+
+        @if (p.showOrderButton || p.showMenuButton) {
+          <div class="mt-8 flex flex-wrap gap-3 sm:mt-10 sm:gap-4 lp-rise" [style.--d]="5">
+            @if (p.showOrderButton) {
+              <button type="button" class="lp-btn lp-btn-primary" (click)="viewMenu()">
+                {{ p.orderButtonText }}
+                <mat-icon class="lp-btn-arrow">arrow_forward</mat-icon>
+              </button>
+            }
+            @if (p.showMenuButton) {
+              <button type="button" class="lp-btn lp-btn-ghost" (click)="viewMenu()">{{ p.menuButtonText }}</button>
+            }
+          </div>
+        }
+
+        @if (store.orderingLocked()) {
+          <p class="lp-closed lp-rise" [style.--d]="6">
+            <span class="lp-closed-dot"></span>
+            <span i18n="@@storefront.landing.closed">Closed right now — you can still browse the menu.</span>
+          </p>
+        }
+      </div>
+    </section>
+
+    <!-- Feature strip -->
+    @if (p.highlights.length) {
+      <footer class="lp-shell relative z-10 pb-6 sm:pb-9">
+        <ul class="lp-highlights lp-rise" [style.--d]="7" [style.--cols]="p.highlights.length">
+          @for (h of p.highlights; track $index) {
+            <li class="lp-highlight">
+              <span class="lp-highlight-icon"><mat-icon>{{ h.icon }}</mat-icon></span>
+              <span class="min-w-0">
+                <span class="lp-highlight-title">{{ h.title }}</span>
+                @if (h.subtitle) {
+                  <span class="lp-highlight-sub">{{ h.subtitle }}</span>
+                }
+              </span>
+            </li>
+          }
+        </ul>
+      </footer>
+    }
+  </main>
 }

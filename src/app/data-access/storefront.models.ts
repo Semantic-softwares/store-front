@@ -1,3 +1,5 @@
+import type { LandingPageSettings } from '../store-landing/landing-page';
+
 // Deliberately independent of shared/models's staff-facing Product/Store types —
 // this is a separate, public data contract, not a reuse of the authenticated
 // app's models. See the plan's "don't reuse staff components/stores" decision.
@@ -9,6 +11,7 @@ export interface SelfOrderSettings {
   showWifi?: boolean;
   showContactInfo?: boolean;
   wifi?: StorefrontWifi;
+  landingPage?: LandingPageSettings;
 }
 
 // Only what a guest would use to find or call the venue. The backend already

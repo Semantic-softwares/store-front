@@ -1,0 +1,109 @@
+@let store_ = info();
+<div class="contact-dialog" style="font-family: 'DM Sans', system-ui, sans-serif">
+  <div class="flex items-start gap-3 px-6 pt-6">
+    @if (store_?.logo) {
+      <img [src]="store_!.logo" [alt]="store_!.name" class="h-12 w-12 shrink-0 rounded-full object-cover ring-1 ring-black/10" />
+    } @else {
+      <span class="grid h-12 w-12 shrink-0 place-items-center rounded-full text-white" style="background: var(--lp-accent)">
+        <mat-icon>storefront</mat-icon>
+      </span>
+    }
+    <div class="min-w-0 flex-1">
+      <p class="text-xs font-semibold uppercase tracking-[0.14em]" style="color: var(--lp-accent)" i18n="@@storefront.contact.eyebrow">Contact</p>
+      <h2 class="truncate text-xl font-bold text-gray-900" style="font-family: 'Outfit', system-ui, sans-serif">{{ store_?.name }}</h2>
+    </div>
+    <button
+      type="button"
+      (click)="close()"
+      class="-mr-2 -mt-1 grid h-10 w-10 place-items-center rounded-full text-gray-500 transition hover:bg-gray-100 focus-visible:outline-2 focus-visible:outline-offset-2"
+      aria-label="Close"
+      i18n-aria-label="@@storefront.contact.close"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="max-h-[70vh] overflow-y-auto px-6 pb-6 pt-5">
+    @if (store.orderingLocked()) {
+      <p class="mb-4 flex items-center gap-2 rounded-xl bg-red-50 px-3 py-2.5 text-sm font-medium text-red-700">
+        <mat-icon class="!text-lg">schedule</mat-icon>
+        <span i18n="@@storefront.contact.closedNotice">Closed right now — not accepting orders.</span>
+      </p>
+    }
+
+    @if (hasAnyContact()) {
+      <ul class="space-y-2">
+        @if (store_?.contactInfo?.phone; as phone) {
+          <li>
+            <a class="contact-row" [href]="telHref(phone)">
+              <span class="contact-icon"><mat-icon>call</mat-icon></span>
+              <span class="min-w-0 flex-1">
+                <span class="block text-xs text-gray-500" i18n="@@storefront.contact.phone">Phone</span>
+                <span class="block truncate font-medium text-gray-900">{{ phone }}</span>
+              </span>
+              <mat-icon class="text-gray-400">chevron_right</mat-icon>
+            </a>
+          </li>
+        }
+        @if (store_?.contactInfo?.email; as email) {
+          <li>
+            <a class="contact-row" [href]="'mailto:' + email">
+              <span class="contact-icon"><mat-icon>mail</mat-icon></span>
+              <span class="min-w-0 flex-1">
+                <span class="block text-xs text-gray-500" i18n="@@storefront.contact.email">Email</span>
+                <span class="block truncate font-medium text-gray-900">{{ email }}</span>
+              </span>
+              <mat-icon class="text-gray-400">chevron_right</mat-icon>
+            </a>
+          </li>
+        }
+        @if (address(); as addr) {
+          <li>
+            @if (directionsUrl(); as url) {
+              <a class="contact-row" [href]="url" target="_blank" rel="noopener">
+                <span class="contact-icon"><mat-icon>location_on</mat-icon></span>
+                <span class="min-w-0 flex-1">
+                  <span class="block text-xs text-gray-500" i18n="@@storefront.contact.address">Address · Get directions</span>
+                  <span class="block font-medium text-gray-900">{{ addr }}</span>
+                </span>
+                <mat-icon class="text-gray-400">open_in_new</mat-icon>
+              </a>
+            }
+          </li>
+        }
+      </ul>
+    } @else {
+      <p class="rounded-xl bg-gray-50 px-4 py-3 text-sm text-gray-600" i18n="@@storefront.contact.none">
+        This store hasn't shared contact details yet.
+      </p>
+    }
+
+    @if (store_?.businessHours?.length) {
+      <h3 class="mb-2 mt-6 text-xs font-semibold uppercase tracking-[0.14em] text-gray-500" i18n="@@storefront.contact.hours">
+        Opening hours
+      </h3>
+      <div class="overflow-hidden rounded-xl ring-1 ring-gray-200">
+        @for (day of store_!.businessHours!; track day.day) {
+          <div
+            class="flex items-center justify-between px-4 py-2 text-sm"
+            [class.bg-gray-50]="day.isToday"
+            [class.border-t]="!$first"
+            style="border-color: #f1f1f1"
+          >
+            <span class="capitalize text-gray-900" [class.font-semibold]="day.isToday">
+              {{ day.day }}
+              @if (day.isToday) {
+                <span class="ml-1.5 rounded-full px-2 py-0.5 text-[11px] font-semibold text-white" style="background: var(--lp-accent)" i18n="@@storefront.contact.today">Today</span>
+              }
+            </span>
+            @if (day.open) {
+              <span class="tabular-nums text-gray-600">{{ day.opens }} – {{ day.closes }}</span>
+            } @else {
+              <span class="text-gray-400" i18n="@@storefront.contact.closedDay">Closed</span>
+            }
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>
